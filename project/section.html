@@ -1,0 +1,271 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>About Page</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+  <style>
+    /* 기본 스타일 */
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: "Poppins", sans-serif;
+      background-color: #1a1a2e;
+      color: #ffffff;
+      overflow: hidden;
+    }
+
+    nav {
+      position: fixed;
+      top: 0;
+      width: 100%;
+      background-color: #1f1f1f;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 15px 0;
+      z-index: 100;
+    }
+
+    nav a {
+      color: white;
+      text-decoration: none;
+      margin: 0 15px;
+      font-size: 18px;
+      font-weight: 300;
+      text-transform: uppercase;
+      transition: color 0.3s;
+
+    }
+
+    nav a:hover, nav a.active {
+      color: #e74c3c;
+    }
+
+    #background {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: -1;
+    }
+
+    .about-container {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 120px;
+      margin-top: 80px;
+
+    }
+
+    .left-section {
+      flex: 1;
+      text-align: left;
+      padding-right: 500px;
+      padding-top: 200px;
+    }
+
+
+
+
+    .left-section p {
+      font-size: 1.2rem;
+      line-height: 1.8;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  
+    }
+
+    .right-section {
+      flex: 1;
+      text-align: center;
+    }
+
+    .right-section h2 {
+      font-size: 2.5rem;
+      margin-bottom: 30px;
+    }
+
+    .tech-icons {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 15px;
+    }
+
+    .tech-icons .icon {
+      width: 100px;
+      height: 100px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      background: #2c2c2c;
+      border-radius: 22px;
+      transition: transform 0.3s, box-shadow 0.3s;
+    }
+
+    .tech-icons .icon img {
+      width: 60%;
+    }
+
+    .tech-icons .icon:hover {
+      transform: scale(1.1);
+      box-shadow: 0 5px 15px rgba(255, 126, 103, 0.5);
+    }
+  </style>
+</head>
+<body>
+  <canvas id="background"></canvas>
+
+  <nav>
+    <a href="index.html">Home</a>
+    <a href="section.html" class="active">About</a>
+    <a href="projects.html">Projects</a>
+  </nav>
+
+  <div class="about-container">
+    <div class="left-section">
+      <div class="profile-icon"></div>
+      <p>
+        프로그래밍이라는 학문에 진심으로 헌신하며,<br> Java, React, 그리고 클라우드 개발 전반에<br> 깊은 열정을 가진 풀스택 개발자를 목표로 합니다.<br> 창의성, 논리, 기술의 독특한 조합과 끊임없이<br> 새로움을 발견할 수 있다는 점이<br> 웹 개발에 대한 제 흥미와 열정을 자극합니다. 
+      </p>
+    </div>
+
+    <div class="right-section">
+      <h2>Technologies</h2>
+      <div class="tech-icons">
+        <div class="icon"><img src="./assets/images/html5.png" alt="HTML"></div>
+        <div class="icon"><img src="./assets/images/css.png" alt="CSS"></div>
+        <div class="icon"><img src="./assets/images/javas.png" alt="JavaScript"></div>
+        <div class="icon"><img src="./assets/images/react.png" alt="React"></div>
+        <div class="icon"><img src="./assets/images/nodejs.png" alt="Node.js"></div>
+      </div>
+    </div>
+  </div>
+</body>
+<script>
+  const canvas = document.getElementById("background");
+  const ctx = canvas.getContext("2d");
+
+  canvas.width = window.innerWidth;
+  canvas.height = window.innerHeight;
+
+  const particlesArray = [];
+  const numberOfParticles = 200; // 점 개수
+  const mouse = {
+    x: null,
+    y: null,
+  };
+
+  // 마우스 위치 업데이트
+  window.addEventListener("mousemove", (event) => {
+    mouse.x = event.x;
+    mouse.y = event.y;
+  });
+
+  // 마우스가 캔버스를 벗어났을 때 위치 초기화
+  window.addEventListener("mouseout", () => {
+    mouse.x = null;
+    mouse.y = null;
+  });
+
+  // 파티클 클래스
+  class Particle {
+    constructor(x, y, directionX, directionY, size, color) {
+      this.x = x;
+      this.y = y;
+      this.directionX = directionX;
+      this.directionY = directionY;
+      this.size = size;
+      this.color = color;
+    }
+
+    draw() {
+      ctx.beginPath();
+      ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2, false);
+      ctx.fillStyle = this.color;
+      ctx.fill();
+    }
+
+    update() {
+      if (this.x + this.size > canvas.width || this.x - this.size < 0) {
+        this.directionX = -this.directionX;
+      }
+      if (this.y + this.size > canvas.height || this.y - this.size < 0) {
+        this.directionY = -this.directionY;
+      }
+
+      this.x += this.directionX;
+      this.y += this.directionY;
+
+      this.draw();
+    }
+  }
+
+  function init() {
+    particlesArray.length = 0;
+    for (let i = 0; i < numberOfParticles; i++) {
+      const size = Math.random() * 1.2 + 0.1; // 점 크기 줄이기
+      const x = Math.random() * canvas.width;
+      const y = Math.random() * canvas.height;
+      const directionX = Math.random() * 0.5 - 0.1; // 이동 속도 느리게
+      const directionY = Math.random() * 0.5 - 0.1;
+      const color = "#ffffff"; // 점 색상 (흰색)
+
+      particlesArray.push(
+        new Particle(x, y, directionX, directionY, size, color)
+      );
+    }
+  }
+
+  function connectParticles() {
+    for (let a = 0; a < particlesArray.length; a++) {
+      for (let b = a; b < particlesArray.length; b++) {
+        const dx = particlesArray[a].x - particlesArray[b].x;
+        const dy = particlesArray[a].y - particlesArray[b].y;
+        const distance = Math.sqrt(dx * dx + dy * dy);
+
+        if (distance < 100) {
+          const gradient = ctx.createLinearGradient(
+            particlesArray[a].x,
+            particlesArray[a].y,
+            particlesArray[b].x,
+            particlesArray[b].y
+          );
+
+          gradient.addColorStop(0, "rgb(0, 128, 255)");
+          gradient.addColorStop(1, "rgb(255, 31, 31)");
+
+          ctx.strokeStyle = gradient;
+          ctx.lineWidth = 0.2;
+          ctx.beginPath();
+          ctx.moveTo(particlesArray[a].x, particlesArray[a].y);
+          ctx.lineTo(particlesArray[b].x, particlesArray[b].y);
+          ctx.stroke();
+        }
+      }
+    }
+  }
+
+  function animate() {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    particlesArray.forEach((particle) => particle.update());
+    connectParticles();
+    requestAnimationFrame(animate);
+  }
+
+  window.addEventListener("resize", () => {
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+    init();
+  });
+
+  init();
+  animate();
+</script>
+</html>

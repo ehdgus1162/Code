@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Projects</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+  <style>
+    /* 기본 스타일 */
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: "Poppins", sans-serif;
+      background-color: #1a1a2e;
+      color: #ffffff;
+      overflow: hidden;
+    }
+
+    nav {
+      position: fixed;
+      top: 0;
+      width: 100%;
+      background-color: #1f1f1f;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 15px 0;
+      z-index: 100;
+    }
+
+    nav a {
+      color: white;
+      text-decoration: none;
+      margin: 0 15px;
+      font-size: 18px;
+      font-weight: 300;
+      text-transform: uppercase;
+      transition: color 0.3s;
+    }
+
+    nav a:hover, nav a.active {
+      color: #e74c3c;
+    }
+
+    #background {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: -1;
+    }
+
+    .projects-container {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 100px;
+      margin-top: 80px;
+    }
+
+    .project-preview {
+      flex: 1;
+      max-width: 50%;
+    }
+
+    .project-preview img {
+      width: 100%;
+      border-radius: 15px;
+      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.6);
+      transition: transform 0.4s, box-shadow 0.4s;
+    }
+
+    .project-preview img:hover {
+      transform: scale(1.05) rotate(1deg);
+      box-shadow: 0 12px 30px rgba(255, 126, 103, 0.8);
+      filter: brightness(1.1) saturate(1.2);
+    }
+
+    .project-details {
+      flex: 1;
+      padding-left: 40px;
+      text-align: left;
+    }
+
+    .project-details h1 {
+      font-size: 3rem;
+      margin-bottom: 20px;
+    }
+
+    .project-details p {
+      font-size: 1.2rem;
+      line-height: 1.8;
+      margin-bottom: 20px;
+    }
+
+    .project-links a {
+      display: inline-block;
+      margin-right: 20px;
+      padding: 10px 20px;
+      background-color: #e74c3c;
+      color: #ffffff;
+      text-decoration: none;
+      border-radius: 5px;
+      transition: background-color 0.3s;
+    }
+
+    .project-links a:hover {
+      background-color: #ff6b6b;
+    }
+  </style>
+</head>
+<body>
+  <canvas id="background"></canvas>
+
+  <nav>
+    <a href="index.html">Home</a>
+    <a href="section.html">About</a>
+    <a href="projects.html" class="active">objective</a>
+
+  </nav>
+
+  <div class="projects-container">
+    <div class="project-preview">
+      <img src="./assets/images/CODE.PNG" alt="Project Screenshot">
+    </div>
+
+    <div class="project-details">
+      <h1><br>Objective</h1>
+      <p>
+        개발자로서의 기술적 역량을 강화하고, 동시에<br> 팀워크와 협업 능력을 더욱 향상시키는 데 주력할 것입니다.
+      </p>
+      <div class="project-links">
+        <a href="#">More Project</a>
+        <a href="#">Learn More</a>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const canvas = document.getElementById("background");
+    const ctx = canvas.getContext("2d");
+
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+
+    const particlesArray = [];
+    const numberOfParticles = 200;
+
+    class Particle {
+      constructor(x, y, directionX, directionY, size, color) {
+        this.x = x;
+        this.y = y;
+        this.directionX = directionX;
+        this.directionY = directionY;
+        this.size = size;
+        this.color = color;
+      }
+
+      draw() {
+        ctx.beginPath();
+        ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2, false);
+        ctx.fillStyle = this.color;
+        ctx.fill();
+      }
+
+      update() {
+        if (this.x + this.size > canvas.width || this.x - this.size < 0) {
+          this.directionX = -this.directionX;
+        }
+        if (this.y + this.size > canvas.height || this.y - this.size < 0) {
+          this.directionY = -this.directionY;
+        }
+
+        this.x += this.directionX;
+        this.y += this.directionY;
+
+        this.draw();
+      }
+    }
+
+    function init() {
+      particlesArray.length = 0;
+      for (let i = 0; i < numberOfParticles; i++) {
+        const size = Math.random() * 1.2 + 0.1;
+        const x = Math.random() * canvas.width;
+        const y = Math.random() * canvas.height;
+        const directionX = Math.random() * 0.5 - 0.1;
+        const directionY = Math.random() * 0.5 - 0.1;
+        const color = "#ffffff";
+
+        particlesArray.push(
+          new Particle(x, y, directionX, directionY, size, color)
+        );
+      }
+    }
+
+    function animate() {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      particlesArray.forEach((particle) => particle.update());
+      requestAnimationFrame(animate);
+    }
+
+    window.addEventListener("resize", () => {
+      canvas.width = window.innerWidth;
+      canvas.height = window.innerHeight;
+      init();
+    });
+
+    init();
+    animate();
+
+    document.querySelectorAll('.project-preview img').forEach(img => {
+  img.style.perspective = '1000px'; // 3D 효과를 위한 관점 설정
+
+  img.addEventListener('mousemove', (e) => {
+    const rect = img.getBoundingClientRect();
+    const x = e.clientX - rect.left; // 마우스 X 좌표
+    const y = e.clientY - rect.top;  // 마우스 Y 좌표
+
+    const centerX = rect.width / 2;  // 이미지 중심 X 좌표
+    const centerY = rect.height / 2; // 이미지 중심 Y 좌표
+
+    const rotateX = (centerY - y) / 10; // X 축 회전 각도
+    const rotateY = (x - centerX) / 10; // Y 축 회전 각도
+
+    img.style.transform = `rotateX(${rotateX}deg) rotateY(${rotateY}deg) scale(1.05)`;
+  });
+
+  img.addEventListener('mouseleave', () => {
+    img.style.transform = 'rotateX(0deg) rotateY(0deg) scale(1)';
+  });
+});
+  </script>
+</body>
+</html>
